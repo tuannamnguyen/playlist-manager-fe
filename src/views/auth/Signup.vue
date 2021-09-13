@@ -1,5 +1,5 @@
 <template>
-    <form @submit.prevent="handleSubmit">
+    <form @submit.prevent="handleSubmit()">
         <h3>Sign up</h3>
         <input type="text" placeholder="Display name" v-model="displayName" />
         <input type="email" placeholder="Email" v-model="email" />
@@ -13,7 +13,8 @@
 
 <script>
 import useSignup from "@/composables/useSignup";
-import { ref } from '@vue/reactivity';
+import { ref } from "@vue/reactivity";
+import { useRouter } from "vue-router";
 
 export default {
     setup() {
@@ -21,6 +22,7 @@ export default {
         const email = ref("");
         const password = ref("");
         const displayName = ref("");
+        const router = useRouter();
 
         const handleSubmit = async () => {
             const res = await signup(
@@ -28,8 +30,10 @@ export default {
                 password.value,
                 displayName.value
             );
-            if (!error.value) {
-                console.log("user signed up");
+            if (error.value) {
+                console.log(error.value);
+            } else {
+                router.push({ name: "Home" });
             }
         };
 
