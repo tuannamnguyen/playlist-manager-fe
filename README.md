@@ -6,7 +6,7 @@ It allows creation and storage of playlists with it's songs and cover images.
 
 🔑 In this project, the API key is declared as a local environment variable. A new key must be created at https://firebase.google.com/ and replaced in the src/firebase/config.js file.
 
-**Link:** https://playlist-vue-project-a4e60.web.app/
+**Check it** at  https://playlist-vue-project-a4e60.web.app/
 ## 📷 Screen Samples
 #### Home page
 ![](/samples/playlists.jpg)
