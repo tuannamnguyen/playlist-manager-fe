@@ -1,13 +1,13 @@
-# Web Playlist Creator
+## 🎵 Web Playlist Creator
 
-A project of a simulated music streaming service with **authentication** and **authorization** using Firebase.
+A project of a simulated music streaming service with **authentication**, **authorization**, database and hosting with Firebase.
 
 It allows creation and storage of playlists with it's songs names, artists and cover images.
 
-🔑 In this project, the API key is declared as a local environment variable. A new key must be created at https://firebase.google.com/ and replaced in the src/firebase/config.js file.
+In this project, the API key is declared as a local environment variable. A new key must be created at https://firebase.google.com/ and replaced in the src/firebase/config.js file.
 
-**Check it** at  https://playlist-vue-project-a4e60.web.app/
-## 📷 Screen Samples
+🔗 https://playlist-vue-project-a4e60.web.app/
+## 📸 Screenshots
 #### Home page
 ![](/samples/playlists.jpg)
 #### User playlists
