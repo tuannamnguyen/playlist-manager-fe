@@ -2,7 +2,7 @@
 
 A project of a simulated music streaming service with **authentication** and **authorization** using Firebase.
 
-It allows creation and storage of playlists with it's songs and cover images.
+It allows creation and storage of playlists with it's songs names, artists and cover images.
 
 🔑 In this project, the API key is declared as a local environment variable. A new key must be created at https://firebase.google.com/ and replaced in the src/firebase/config.js file.
 
