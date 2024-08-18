@@ -1,17 +1,20 @@
 import { ref } from 'vue'
-import { projectAuth } from '../firebase/config'
 
-// refs
-const user = ref(projectAuth.currentUser)
+const user = ref(null)
 
-// auth changes
-projectAuth.onAuthStateChanged(_user => {
-  console.log('User state change. Current user is:', _user)
-  user.value = _user
-});
+const mockAuthStateChange = () => {
+  // Simulate auth state change
+  setTimeout(() => {
+    const mockUser = { id: '1', name: 'John Doe', email: 'john@example.com' }
+    console.log('User state change. Current user is:', mockUser)
+    user.value = mockUser
+  }, 1000)
+}
+
+mockAuthStateChange()
 
 const getUser = () => {
-  return { user } 
+  return { user }
 }
 
 export default getUser

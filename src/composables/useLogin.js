@@ -1,5 +1,4 @@
 import { ref } from 'vue'
-import { projectAuth } from '../firebase/config'
 
 const error = ref(null)
 const isPending = ref(false)
@@ -9,7 +8,20 @@ const login = async (email, password) => {
   isPending.value = true
 
   try {
-    const res = await projectAuth.signInWithEmailAndPassword(email, password)
+    // Mock API call
+    const response = await fetch('/api/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email, password }),
+    })
+
+    if (!response.ok) {
+      throw new Error('Incorrect login credentials')
+    }
+
+    const res = await response.json()
     error.value = null
     isPending.value = false
     return res

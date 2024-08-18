@@ -1,29 +1,37 @@
 import { ref } from 'vue'
-import { projectFirestore } from '../firebase/config'
 
 const useCollection = (collection) => {
-
   const error = ref(null)
   const isPending = ref(false)
 
-  // add a new document
   const addDoc = async (doc) => {
     error.value = null
     isPending.value = true
 
     try {
-      return await projectFirestore.collection(collection).add(doc)
+      // Mock API call
+      const response = await fetch(`/api/${collection}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(doc),
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to add document')
+      }
+
       isPending.value = false
-    }
-    catch (err) {
+      return await response.json()
+    } catch (err) {
       console.log(err.message)
-      error.value = 'could not send the message'
+      error.value = 'Could not send the message'
       isPending.value = false
     }
   }
 
   return { error, addDoc, isPending }
-
 }
 
 export default useCollection

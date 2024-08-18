@@ -1,38 +1,39 @@
 import { ref, watchEffect } from 'vue'
-import { projectFirestore } from '../firebase/config'
 
 const getCollection = (collection, query) => {
-
     const documents = ref(null)
     const error = ref(null)
 
-    // register the firestore collection reference
-    let collectionRef = projectFirestore.collection(collection)
-        .orderBy('createdAt')
+    const fetchData = async () => {
+        try {
+            // Mock API call
+            const response = await fetch(`/api/${collection}`)
+            if (!response.ok) {
+                throw new Error('Failed to fetch data')
+            }
+            let results = await response.json()
 
-    if (query) {
-        collectionRef = collectionRef.where(...query)
+            if (query) {
+                // Simple client-side filtering (replace with server-side filtering in a real API)
+                results = results.filter(item => item[query[0]] === query[2])
+            }
+
+            results.sort((a, b) => a.createdAt - b.createdAt)
+            documents.value = results
+            error.value = null
+        } catch (err) {
+            console.log(err.message)
+            documents.value = null
+            error.value = 'Could not fetch the data'
+        }
     }
 
-    const unsub = collectionRef.onSnapshot(snap => {
-        let results = []
-        snap.docs.forEach(doc => {
-            // must wait for the server to create the timestamp & send it back
-            doc.data().createdAt && results.push({ ...doc.data(), id: doc.id })
-        });
-
-        // update values
-        documents.value = results
-        error.value = null
-    }, err => {
-        console.log(err.message)
-        documents.value = null
-        error.value = 'could not fetch the data'
-    })
+    fetchData()
 
     watchEffect((onInvalidate) => {
-        onInvalidate(() => unsub());
-    });
+        const intervalId = setInterval(fetchData, 5000) // Polling every 5 seconds to simulate real-time updates
+        onInvalidate(() => clearInterval(intervalId))
+    })
 
     return { error, documents }
 }

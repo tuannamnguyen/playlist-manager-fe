@@ -1,20 +1,27 @@
 import { ref } from 'vue'
-import { projectAuth } from '../firebase/config'
 
 const error = ref(null)
 const isPending = ref(false)
-
 
 const signup = async (email, password, displayName) => {
   error.value = null
   isPending.value = true
 
   try {
-    const res = await projectAuth.createUserWithEmailAndPassword(email, password)
-    if (!res) {
+    // Mock API call
+    const response = await fetch('/api/signup', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email, password, displayName }),
+    })
+
+    if (!response.ok) {
       throw new Error('Could not complete signup')
     }
-    await res.user.updateProfile({ displayName })
+
+    const res = await response.json()
     error.value = null
     isPending.value = false
 

@@ -1,31 +1,35 @@
 import { ref, watchEffect } from 'vue'
-import { projectFirestore } from '../firebase/config'
 
 const getDocument = (collection, id) => {
-
     const document = ref(null)
     const error = ref(null)
 
-    // register the firestore collection reference
-    let documentRef = projectFirestore.collection(collection).doc(id)
-
-    const unsub = documentRef.onSnapshot(doc => {
-        if (doc.data()) {
-            document.value = { ...doc.data(), id: doc.id }
-            error.value = null
-        } else {
-            error.value = 'that documento does not exist'
+    const fetchDocument = async () => {
+        try {
+            // Mock API call
+            const response = await fetch(`/api/${collection}/${id}`)
+            if (!response.ok) {
+                throw new Error('Failed to fetch document')
+            }
+            const data = await response.json()
+            if (data) {
+                document.value = { ...data, id }
+                error.value = null
+            } else {
+                error.value = 'That document does not exist'
+            }
+        } catch (err) {
+            console.log(err.message)
+            error.value = 'Could not fetch the data'
         }
-    }, err => {
-        console.log(err.message)
-        error.value = 'could not fetch the data'
-    })
+    }
 
+    fetchDocument()
 
-    // ! UNSTACKS / eliminate real time listeners
     watchEffect((onInvalidate) => {
-        onInvalidate(() => unsub());
-    });
+        const intervalId = setInterval(fetchDocument, 5000) // Polling every 5 seconds to simulate real-time updates
+        onInvalidate(() => clearInterval(intervalId))
+    })
 
     return { error, document }
 }
