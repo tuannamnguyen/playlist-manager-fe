@@ -4,25 +4,23 @@
         <div v-if="playlists">
             <ListView :playlists="playlists" />
         </div>
-        <router-link :to="{name: 'CreatePlaylist'}" class="btn">Create a playlist</router-link>
+        <router-link :to="{ name: 'CreatePlaylist' }" class="btn">Create a playlist</router-link>
     </div>
 </template>
 
 <script>
-import getCollection from "../../composables/getCollection";
-import getUser from "@/composables/getUser";
+import { onMounted } from "vue";
+import usePlaylist from "@/composables/usePlaylist";
 import ListView from "@/components/ListView.vue";
 
 export default {
     components: { ListView },
     setup() {
-        const { user } = getUser();
-        const { documents: playlists } = getCollection("playlist", [
-            "userId",
-            "==",
-            user.value.uid,
-        ]);
-        return { playlists };
+        const { error, playlists, fetchPlaylists } = usePlaylist();
+
+        onMounted(fetchPlaylists);
+
+        return { playlists, error };
     },
 };
 </script>
