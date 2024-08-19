@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../views/Home.vue'
 import Login from '../views/auth/Login.vue'
 import Signup from '../views/auth/Signup.vue'
+import Callback from '../views/auth/Callback.vue'
 import CreatePlaylist from '../views/playlists/CreatePlaylist.vue'
 import PlaylistDetails from '../views/playlists/PlaylistDetails.vue'
 import UserPlaylists from '../views/playlists/UserPlaylists.vue'
@@ -35,6 +36,11 @@ const routes = [
         path: '/signup',
         name: 'Signup',
         component: Signup
+    },
+    {
+        path: "/callback",
+        name: "Callback",
+        component: Callback
     },
     {
         path: '/playlists/create',
