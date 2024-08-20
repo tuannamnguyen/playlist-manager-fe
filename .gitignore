@@ -1,6 +1,24 @@
 # File created using '.gitignore Generator' for Visual Studio Code: https://bit.ly/vscode-gig
-# Created by https://www.toptal.com/developers/gitignore/api/venv,node,vue,vuejs
-# Edit at https://www.toptal.com/developers/gitignore?templates=venv,node,vue,vuejs
+# Created by https://www.toptal.com/developers/gitignore/api/visualstudiocode,linux,dotenv,node,venv,vue,vuejs
+# Edit at https://www.toptal.com/developers/gitignore?templates=visualstudiocode,linux,dotenv,node,venv,vue,vuejs
+
+### dotenv ###
+.env
+
+### Linux ###
+*~
+
+# temporary files which can be created if a process still has a handle open of a deleted file
+.fuse_hidden*
+
+# KDE directory preferences
+.directory
+
+# Linux trash folder which might appear on any partition or disk
+.Trash-*
+
+# .nfs files are created when an open file is removed but is still being accessed
+.nfs*
 
 ### Node ###
 # Logs
@@ -78,7 +96,6 @@ web_modules/
 .yarn-integrity
 
 # dotenv environment variable files
-.env
 .env.development.local
 .env.test.local
 .env.production.local
@@ -156,6 +173,25 @@ pyvenv.cfg
 .venv
 pip-selfcheck.json
 
+### VisualStudioCode ###
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
+
+# Local History for Visual Studio Code
+.history/
+
+# Built Visual Studio Code Extensions
+*.vsix
+
+### VisualStudioCode Patch ###
+# Ignore all local history of files
+.history
+.ionide
+
 ### Vue ###
 # gitignore template for Vue.js projects
 #
@@ -174,37 +210,6 @@ dist/
 npm-debug.log
 yarn-error.log
 
-# End of https://www.toptal.com/developers/gitignore/api/venv,node,vue,vuejs
+# End of https://www.toptal.com/developers/gitignore/api/visualstudiocode,linux,dotenv,node,venv,vue,vuejs
 
 # Custom rules (everything added below won't be overriden by 'Generate .gitignore File' if you use 'Update' option)
-
-.DS_Store
-node_modules
-/dist
-/images
-
-
-# local env files
-.env.local
-.env.*.local
-
-# Log files
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-
-# Editor directories and files
-.idea
-.vscode
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
-
-
-.env*
-.flaskenv*
-!.env.project
-!.env.vault
