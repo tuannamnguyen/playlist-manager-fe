@@ -46,7 +46,7 @@ nav .links {
 
 nav .links a,
 button {
-    margin-top: 16px;
+    margin-left: 16px;
     font-size: 14px;
 }
 
