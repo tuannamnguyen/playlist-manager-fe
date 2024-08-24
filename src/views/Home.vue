@@ -9,12 +9,13 @@
 
 <script>
 import ListView from '@/components/ListView.vue';
+import getCollection from '@/composables/getCollection';
 
 export default {
     name: "Home",
     components: { ListView },
     setup() {
-        const { error, playlists } = getCollection("playlist");
+        const { error, playlists } = getCollection();
         return { error, playlists };
     }
 }
