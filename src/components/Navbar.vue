@@ -3,14 +3,14 @@
         <nav>
             <img src="@/assets/token.png">
             <h1>
-                <router-link to="/">Playlist manager</router-link>
+                <router-link to="/">Playlist Manager</router-link>
             </h1>
             <div class="links">
                 <div>
                     <router-link to="/create_playlist">Create Playlist</router-link>
                     <router-link to="/my_playlist">My Playlist</router-link>
+                    <span>Hi there, Nam</span>
                 </div>
-                <span>Hi there, Nam</span>
             </div>
             <button>Sign Up</button>
             <button>Log In</button>

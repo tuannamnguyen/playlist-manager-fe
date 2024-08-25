@@ -3,11 +3,13 @@
         <router-link to="/">
             <div class="single">
                 <div class="thumbnail">
-                    <img :src="playlist.coverURL" />
-                    <p>{{ playlist.coverURL }}</p>
+                    <img :src="playlist.image_url" />
+                    <p>{{ playlist.image_url }}</p>
                 </div>
                 <div class="info">
                     <h3>{{ playlist.playlist_name }}</h3>
+                    <!-- TODO: need to replace with user name here -->
+                    <p>created by {{ playlist.user_id }}</p>
                 </div>
             </div>
         </router-link>
