@@ -1,6 +1,37 @@
 <template>
+    <div v-if="error" class="error">{{ error }}</div>
+    <div v-if="playlist" class="playlist-details">
+        <div class="playlist-info">
+            <div class="cover">
+                <img :src="playlist.image_url">
+            </div>
+            <h2>{{ playlist.title }}</h2>
+            <p>Created by {{ playlist.user_id }}</p>
+            <p class="description">Lorem ipsum</p>
+            <button>Delete Playlist</button>
+        </div>
 
+        <div class="song-list">
+            <div v-if="!0">
+                No songs have been added to this playlist yet
+            </div>
+        </div>
+    </div>
 </template>
+
+
+<script>
+import getDocument from '@/composables/getDocument';
+
+export default {
+    props: ["id"],
+    setup(props) {
+        const { error, document: playlist } = getDocument("playlist", props.id);
+
+        return {error, playlist}
+    }
+}
+</script>
 
 <style>
 .playlist-details {

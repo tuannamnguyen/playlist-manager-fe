@@ -1,6 +1,6 @@
 <template>
     <div v-for="playlist in playlists" :key="playlist.playlist_id">
-        <router-link to="/">
+        <router-link :to="{ name: 'PlaylistDetails', params: { id: playlist.playlist_id } }">
             <div class="single">
                 <div class="thumbnail">
                     <img :src="playlist.image_url" />
