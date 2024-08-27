@@ -3,17 +3,27 @@
     <div v-if="playlist" class="playlist-details">
         <div class="playlist-info">
             <div class="cover">
-                <img :src="playlist.image_url">
+                <!-- TODO: remove hardcode -->
+                <img src="https://picsum.photos/200/300" />
             </div>
             <h2>{{ playlist.title }}</h2>
-            <p>Created by {{ playlist.user_id }}</p>
+            <p>Created by Nam</p>
             <p class="description">Lorem ipsum</p>
             <button>Delete Playlist</button>
         </div>
 
         <div class="song-list">
-            <div v-if="!0">
+            <!-- TODO: remove hardcode -->
+            <div v-if="!1">
                 No songs have been added to this playlist yet
+            </div>
+            <div v-for="(song, index) in playlist" :key="index" class="single-song">
+                <div class="details">
+                    <h3>{{ song.song_name }}</h3>
+                    <p>{{ song.artist_names }}</p>
+                    <p v-for="artist in playlist.artist_names">{{ artist }}, </p>
+                </div>
+                <button>delete</button>
             </div>
         </div>
     </div>
@@ -27,7 +37,6 @@ export default {
     props: ["id"],
     setup(props) {
         const { error, document: playlist } = getDocument("playlist", props.id);
-
         return {error, playlist}
     }
 }

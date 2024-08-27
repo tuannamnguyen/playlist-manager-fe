@@ -31,7 +31,7 @@ const getDocument = (collection, id) => {
 
     error.value = null
 
-    return { error, document}
+    return { error, document }
 }
 
 export default getDocument
