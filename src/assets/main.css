@@ -15,15 +15,18 @@
   font-family: 'Nunito', sans-serif;
   color: var(--primary);
 }
+
 body {
   background: #fafafa;
 }
+
 a {
   text-decoration: none;
 }
 
 /* buttons */
-button, .btn {
+button,
+.btn {
   background: var(--secondary);
   border-radius: 8px;
   border: 0;
@@ -32,10 +35,13 @@ button, .btn {
   cursor: pointer;
   display: inline-block;
 }
-button:hover, .btn:hover {
+
+button:hover,
+.btn:hover {
   background: var(--primary);
   color: white;
 }
+
 button:disabled {
   opacity: 0.5;
   color: var(--primary);
@@ -49,16 +55,18 @@ form {
   margin: 0 auto;
   padding: 30px;
   border-radius: 8px;
-  box-shadow: 1px 2px 3px rgba(50,50,50,0.05);
-  border: 1px solid  var(--secondary);
+  box-shadow: 1px 2px 3px rgba(50, 50, 50, 0.05);
+  border: 1px solid var(--secondary);
   background: white;
 }
 
-.buttons{
-	display: flex;
-	justify-content: space-between;
+.buttons {
+  display: flex;
+  justify-content: space-between;
 }
-input, textarea {
+
+input,
+textarea {
   border: 0;
   border-bottom: 1px solid var(--secondary);
   padding: 10px;

@@ -1,16 +1,15 @@
 <template>
-    <div v-for="playlist in playlists" :key="playlist.id">
-        <router-link :to="{ name: 'PlaylistDetails', params: { id: playlist.id } }">
+    <div v-for="playlist in playlists" :key="playlist.playlist_id">
+        <router-link :to="{ name: 'PlaylistDetails', params: { id: playlist.playlist_id } }">
             <div class="single">
                 <div class="thumbnail">
-                    <img :src="playlist.cover_url" />
+                    <img :src="playlist.image_url" />
+                    <p>{{ playlist.image_url }}</p>
                 </div>
                 <div class="info">
                     <h3>{{ playlist.playlist_name }}</h3>
-                    <p>created by {{ playlist.user_name }}</p>
-                </div>
-                <div class="song-number">
-                    <p>{{ playlist.songs ? playlist.songs.length : 0 }} songs</p>
+                    <!-- TODO: need to replace with user name here -->
+                    <p>created by {{ playlist.user_id }}</p>
                 </div>
             </div>
         </router-link>
@@ -19,8 +18,8 @@
 
 <script>
 export default {
-    props: ["playlists"],
-};
+    props: ["playlists"]
+}
 </script>
 
 <style scoped>

@@ -3,61 +3,43 @@
     <div v-if="playlist" class="playlist-details">
         <div class="playlist-info">
             <div class="cover">
-                <img :src="playlist.cover_url" />
+                <!-- TODO: remove hardcode -->
+                <img src="https://picsum.photos/200/300" />
             </div>
-            <h2>{{ playlist.playlist_name }}</h2>
-            <p>Created by {{ playlist.user_name }}</p>
-            <p class="description">{{ playlist.description }}</p>
-            <button v-if="ownership" @click="handleDelete">Delete Playlist</button>
+            <h2>{{ playlist.title }}</h2>
+            <p>Created by Nam</p>
+            <p class="description">Lorem ipsum</p>
+            <button>Delete Playlist</button>
         </div>
 
         <div class="song-list">
-            <div v-if="!playlist.songs || !playlist.songs.length">
+            <!-- TODO: remove hardcode -->
+            <div v-if="!1">
                 No songs have been added to this playlist yet
             </div>
-            <div v-else v-for="song in playlist.songs" :key="song.id" class="single-song">
+            <div v-for="(song, index) in playlist" :key="index" class="single-song">
                 <div class="details">
                     <h3>{{ song.song_name }}</h3>
-                    <p>{{ song.artist_names.join(', ') }}</p>
+                    <p>{{ song.artist_names }}</p>
+                    <p v-for="artist in playlist.artist_names">{{ artist }}, </p>
                 </div>
-                <button @click="handleDeleteSong(song.id)" v-if="ownership">delete</button>
+                <button>delete</button>
             </div>
-            <AddSong v-if="ownership" :playlist="playlist" />
         </div>
     </div>
 </template>
 
+
 <script>
-import AddSong from "@/components/AddSong.vue";
-import usePlaylist from "@/composables/usePlaylist";
-import { computed } from "vue";
-import { useRouter } from "vue-router";
+import getDocument from '@/composables/getDocument';
 
 export default {
     props: ["id"],
-    components: { AddSong },
     setup(props) {
-        const { error, playlist, fetchPlaylist, deletePlaylist, deleteSongsFromPlaylist } = usePlaylist();
-        const router = useRouter();
-
-        fetchPlaylist(props.id);
-
-        const ownership = computed(() => {
-            return playlist.value && playlist.value.user_id === '1'; // Replace '1' with actual user ID
-        });
-
-        const handleDelete = async () => {
-            await deletePlaylist(props.id);
-            router.push({ name: "Home" });
-        };
-
-        const handleDeleteSong = async (songId) => {
-            await deleteSongsFromPlaylist(props.id, [songId]);
-        };
-
-        return { error, playlist, ownership, handleDelete, handleDeleteSong };
-    },
-};
+        const { error, document: playlist } = getDocument("playlist", props.id);
+        return {error, playlist}
+    }
+}
 </script>
 
 <style>

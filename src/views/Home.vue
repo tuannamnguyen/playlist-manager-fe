@@ -1,22 +1,22 @@
 <template>
     <div class="home">
         <div v-if="error" class="error">Could not fetch the data</div>
-        <div v-if="documents">
-            <ListView :playlists="documents" />
+        <div v-if="playlists">
+            <ListView :playlists="playlists"></ListView>
         </div>
     </div>
 </template>
 
 <script>
-import ListView from "../components/ListView.vue";
-import getCollection from "../composables/getCollection";
+import ListView from '@/components/ListView.vue';
+import getCollection from '@/composables/getCollection';
+
 export default {
     name: "Home",
     components: { ListView },
     setup() {
-        // ! HAS TO BE EXACTLY THE NAME IN DATABASE
-        const { error, documents } =  getCollection("playlist");
-        return { error, documents };
-    },
-};
+        const { error, playlists } = getCollection();
+        return { error, playlists };
+    }
+}
 </script>

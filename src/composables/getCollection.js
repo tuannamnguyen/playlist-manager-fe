@@ -1,41 +1,41 @@
-import { ref, watchEffect } from 'vue'
+import { ref } from "vue";
 
-const getCollection = (collection, query) => {
-    const documents = ref(null)
-    const error = ref(null)
+const getCollection = () => {
+    // TODO: replace with real API later
 
-    const fetchData = async () => {
-        try {
-            // Mock API call
-            const response = await fetch(`/api/${collection}`)
-            if (!response.ok) {
-                throw new Error('Failed to fetch data')
-            }
-            let results = await response.json()
+    const playlists = ref(null);
+    const error = ref(null);
 
-            if (query) {
-                // Simple client-side filtering (replace with server-side filtering in a real API)
-                results = results.filter(item => item[query[0]] === query[2])
-            }
-
-            results.sort((a, b) => a.createdAt - b.createdAt)
-            documents.value = results
-            error.value = null
-        } catch (err) {
-            console.log(err.message)
-            documents.value = null
-            error.value = 'Could not fetch the data'
+    playlists.value = [
+        {
+            "playlist_id": 1,
+            "playlist_name": "Chill Vibes",
+            "user_id": "1",
+            "updated_at": "2024-08-24T04:05:57.469908Z",
+            "created_at": "2024-08-24T04:05:57.469908Z",
+            "image_url": "https://picsum.photos/200/300"
+        },
+        {
+            "playlist_id": 2,
+            "playlist_name": "Workout Hits",
+            "user_id": "2",
+            "updated_at": "2024-08-24T04:05:57.469908Z",
+            "created_at": "2024-08-24T04:05:57.469908Z",
+            "image_url": "https://picsum.photos/200/300",
+        },
+        {
+            "playlist_id": 3,
+            "playlist_name": "Classic Rock",
+            "user_id": "3",
+            "updated_at": "2024-08-24T04:05:57.469908Z",
+            "created_at": "2024-08-24T04:05:57.469908Z",
+            "image_url": "https://picsum.photos/200/300",
         }
-    }
+    ];
 
-    fetchData()
+    error.value = null;
 
-    watchEffect((onInvalidate) => {
-        const intervalId = setInterval(fetchData, 5000) // Polling every 5 seconds to simulate real-time updates
-        onInvalidate(() => clearInterval(intervalId))
-    })
-
-    return { error, documents }
+    return { error, playlists };
 }
 
-export default getCollection
+export default getCollection;

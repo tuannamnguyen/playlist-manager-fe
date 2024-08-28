@@ -1,35 +1,35 @@
-import { ref, watchEffect } from 'vue'
+import { ref } from "vue";
 
 const getDocument = (collection, id) => {
     const document = ref(null)
     const error = ref(null)
 
-    const fetchDocument = async () => {
-        try {
-            // Mock API call
-            const response = await fetch(`/api/${collection}/${id}`)
-            if (!response.ok) {
-                throw new Error('Failed to fetch document')
-            }
-            const data = await response.json()
-            if (data) {
-                document.value = { ...data, id }
-                error.value = null
-            } else {
-                error.value = 'That document does not exist'
-            }
-        } catch (err) {
-            console.log(err.message)
-            error.value = 'Could not fetch the data'
+    document.value = [
+        {
+            "song_id": 4,
+            "song_name": "devil in a new dress",
+            "artist_names": [
+                "kanye west",
+                "rick ross"
+            ],
+            "album_name": "mbdtf",
+            "updated_at": "2024-08-14T08:45:55.654823Z",
+            "created_at": "2024-08-14T08:45:55.654823Z"
+        },
+        {
+            "song_id": 5,
+            "song_name": "runaway",
+            "artist_names": [
+                "pusha t",
+                "kanye west"
+            ],
+            "album_name": "mbdtf",
+            "updated_at": "2024-08-14T08:45:55.654823Z",
+            "created_at": "2024-08-14T08:45:55.654823Z"
         }
-    }
+    ]
 
-    fetchDocument()
-
-    watchEffect((onInvalidate) => {
-        const intervalId = setInterval(fetchDocument, 5000) // Polling every 5 seconds to simulate real-time updates
-        onInvalidate(() => clearInterval(intervalId))
-    })
+    error.value = null
 
     return { error, document }
 }
