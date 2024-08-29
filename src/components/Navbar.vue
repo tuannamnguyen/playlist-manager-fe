@@ -7,7 +7,7 @@
             </h1>
             <div class="links">
                 <div>
-                    <router-link to="/create_playlist">Create Playlist</router-link>
+                    <router-link :to="{ name: 'CreatePlaylist' }">Create Playlist</router-link>
                     <router-link to="/my_playlist">My Playlist</router-link>
                     <span>Hi there, Nam</span>
                 </div>
