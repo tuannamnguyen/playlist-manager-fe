@@ -8,7 +8,7 @@
             <div class="links">
                 <div>
                     <router-link :to="{ name: 'CreatePlaylist' }">Create Playlist</router-link>
-                    <router-link to="/my_playlist">My Playlist</router-link>
+                    <router-link :to="{ name: 'UserPlaylists' }">My Playlist</router-link>
                     <span>Hi there, Nam</span>
                 </div>
             </div>
