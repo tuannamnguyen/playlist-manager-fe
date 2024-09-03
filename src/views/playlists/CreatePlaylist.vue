@@ -1,17 +1,8 @@
 <template>
     <form @submit.prevent="handleSubmit">
         <h4>Create New Playlist</h4>
-        <input
-            type="text"
-            required
-            placeholder="Playlist Title"
-            v-model="title"
-        />
-        <textarea
-            required
-            placeholder="Playlist description ..."
-            v-model="description"
-        ></textarea>
+        <input type="text" required placeholder="Playlist Title" v-model="title" />
+        <textarea required placeholder="Playlist description ..." v-model="description"></textarea>
         <label>Upload playlist cover image</label>
         <input type="file" @change="handleChange">
 
@@ -22,9 +13,24 @@
 </template>
 
 <script>
+import useCollection from '@/composables/useCollection';
+import { useRouter } from 'vue-router';
+
 export default {
     setup() {
+        const { error, addDoc } = useCollection("");
+        const router = useRouter();
 
+        const title = ref("");
+        const description = ref("");
+        const isPending = ref(false);
+
+        const handleSubmit = async () => {
+            isPending.value = false;
+        }
+
+
+        return { title, description, handleSubmit, isPending }
     }
 }
 </script>

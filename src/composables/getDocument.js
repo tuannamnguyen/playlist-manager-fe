@@ -1,6 +1,8 @@
 import { ref } from "vue";
 
 const getDocument = (collection, id) => {
+    // TODO: replace with get all songs in a playlist API later
+
     const document = ref(null)
     const error = ref(null)
 

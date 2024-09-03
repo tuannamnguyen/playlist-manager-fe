@@ -1,7 +1,7 @@
 import { ref } from "vue";
 
 const getCollection = () => {
-    // TODO: replace with real API later
+    // TODO: replace with API get all playlists later
 
     const playlists = ref(null);
     const error = ref(null);
