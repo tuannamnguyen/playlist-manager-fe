@@ -1,10 +1,11 @@
 <template>
     <form @submit.prevent="handleSubmit">
         <h4>Create New Playlist</h4>
-        <input type="text" required placeholder="Playlist Title" v-model="title" />
-        <textarea required placeholder="Playlist description ..." v-model="description"></textarea>
+        <input type="text" required placeholder="Playlist title" v-model="title" />
+        <textarea required placeholder="Playlist description..." v-model="description"></textarea>
+        <!-- upload playlist image -->
         <label>Upload playlist cover image</label>
-        <input type="file" @change="handleChange">
+        <input type="file" @change="handleChange" />
 
         <div class="error">{{ fileError }}</div>
         <button v-if="!isPending">Create</button>
