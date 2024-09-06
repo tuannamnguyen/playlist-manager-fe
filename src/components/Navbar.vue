@@ -8,7 +8,7 @@
             <div class="links">
                 <div>
                     <router-link to="/playlists/create">Create Playlist</router-link>
-                    <router-link to="/my_playlist">My Playlist</router-link>
+                    <router-link to="/playlists/user">My Playlist</router-link>
                     <span>Hi there, Nam</span>
                 </div>
             </div>
