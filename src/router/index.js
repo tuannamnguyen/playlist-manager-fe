@@ -3,6 +3,7 @@ import Home from '@/views/Home.vue'
 import PlaylistDetails from '@/views/playlists/PlaylistDetails.vue'
 import CreatePlaylist from '@/views/playlists/CreatePlaylist.vue'
 import UserPlaylists from '@/views/playlists/UserPlaylists.vue'
+import CallbackPage from '@/views/auth/CallbackPage.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -27,6 +28,11 @@ const router = createRouter({
       path: "/playlists/user",
       name: "UserPlaylists",
       component: UserPlaylists
+    },
+    {
+      path: "/callback",
+      name: "Callback",
+      component: CallbackPage
     }
   ]
 })
