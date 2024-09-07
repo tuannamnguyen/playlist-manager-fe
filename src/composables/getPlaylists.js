@@ -4,25 +4,23 @@ const apiServerUrl = import.meta.env.VITE_API_SERVER_URL;
 
 const getPlaylists = async () => {
     const error = ref(null);
-    const isPending = ref(false);
+    const isPending = ref(true);
     const playlists = ref([]);
 
-    error.value = null
-    isPending.value = true
     try {
-        const response = await fetch(`${apiServerUrl}/api/playlists`)
+        const response = await fetch(`${apiServerUrl}/api/playlists`);
         if (!response.ok) {
-            throw new Error('Failed to fetch playlists')
+            throw new Error('Failed to fetch playlists');
         }
-        playlists.value = await response.json()
-        isPending.value = false
+        playlists.value = await response.json();
     } catch (err) {
-        console.log(err.message)
-        error.value = 'Could not fetch playlists'
-        isPending.value = false
+        console.error('Error fetching playlists:', err);
+        error.value = 'Could not fetch playlists';
+    } finally {
+        isPending.value = false;
     }
 
-    return { error, playlists };
-}
+    return { error, isPending, playlists };
+};
 
 export default getPlaylists;
