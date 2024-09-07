@@ -1,39 +1,26 @@
 import { ref } from "vue";
 
-const getPlaylists = () => {
-    // TODO: replace with real API later
+const apiServerUrl = import.meta.env.VITE_API_SERVER_URL;
 
-    const playlists = ref(null);
+const getPlaylists = async () => {
     const error = ref(null);
+    const isPending = ref(false);
+    const playlists = ref([]);
 
-    playlists.value = [
-        {
-            "playlist_id": 1,
-            "playlist_name": "Chill Vibes",
-            "user_id": "1",
-            "updated_at": "2024-08-24T04:05:57.469908Z",
-            "created_at": "2024-08-24T04:05:57.469908Z",
-            "image_url": "https://picsum.photos/200/300"
-        },
-        {
-            "playlist_id": 2,
-            "playlist_name": "Workout Hits",
-            "user_id": "2",
-            "updated_at": "2024-08-24T04:05:57.469908Z",
-            "created_at": "2024-08-24T04:05:57.469908Z",
-            "image_url": "https://picsum.photos/200/300",
-        },
-        {
-            "playlist_id": 3,
-            "playlist_name": "Classic Rock",
-            "user_id": "3",
-            "updated_at": "2024-08-24T04:05:57.469908Z",
-            "created_at": "2024-08-24T04:05:57.469908Z",
-            "image_url": "https://picsum.photos/200/300",
+    error.value = null
+    isPending.value = true
+    try {
+        const response = await fetch(`${apiServerUrl}/api/playlists`)
+        if (!response.ok) {
+            throw new Error('Failed to fetch playlists')
         }
-    ];
-
-    error.value = null;
+        playlists.value = await response.json()
+        isPending.value = false
+    } catch (err) {
+        console.log(err.message)
+        error.value = 'Could not fetch playlists'
+        isPending.value = false
+    }
 
     return { error, playlists };
 }
