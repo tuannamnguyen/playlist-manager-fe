@@ -1,3 +1,3 @@
 <template>
-    <p>you have been logged out</p>
+    <p>Callback page</p>
 </template>
