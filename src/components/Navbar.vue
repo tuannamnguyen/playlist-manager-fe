@@ -9,7 +9,7 @@
                 <div v-if="isAuthenticated">
                     <router-link to="/playlists/create">Create Playlist</router-link>
                     <router-link to="/playlists/user">My Playlist</router-link>
-                    <span>Hi there, Nam</span>
+                    <span>Hi there, {{ user.name }}</span>
                     <button @click="handleLogout">Logout</button>
                 </div>
             </div>
@@ -50,6 +50,7 @@ export default {
     data() {
         return {
             isAuthenticated: this.$auth0.isAuthenticated,
+            user: this.$auth0.user,
         };
     },
 };
