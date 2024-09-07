@@ -3,7 +3,8 @@
         <router-link :to="{ name: 'PlaylistDetails', params: { id: playlist.playlist_id } }">
             <div class="single">
                 <div class="thumbnail">
-                    <img :src="playlist.image_url" />
+                    <!-- TODO: replace hardcode later -->
+                    <img src="https://picsum.photos/200/300" />
                     <p>{{ playlist.image_url }}</p>
                 </div>
                 <div class="info">

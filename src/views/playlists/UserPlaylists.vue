@@ -11,11 +11,11 @@
 
 <script>
 import ListView from '@/components/ListView.vue';
-import getCollection from '@/composables/getCollection';
+import getPlaylists from '@/composables/getPlaylists';
 export default {
     components: { ListView },
     setup() {
-        const {error, playlists} = getCollection();
+        const { error, playlists } = getPlaylists();
         return { error, playlists };
     }
 }

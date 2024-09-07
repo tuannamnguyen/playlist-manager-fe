@@ -1,6 +1,6 @@
 import { ref } from "vue";
 
-const getCollection = () => {
+const getPlaylists = () => {
     // TODO: replace with real API later
 
     const playlists = ref(null);
@@ -38,4 +38,4 @@ const getCollection = () => {
     return { error, playlists };
 }
 
-export default getCollection;
+export default getPlaylists;
