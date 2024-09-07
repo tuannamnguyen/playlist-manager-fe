@@ -6,17 +6,54 @@
                 <router-link to="/">Playlist Manager</router-link>
             </h1>
             <div class="links">
-                <div>
+                <div v-if="isAuthenticated">
                     <router-link to="/playlists/create">Create Playlist</router-link>
                     <router-link to="/playlists/user">My Playlist</router-link>
                     <span>Hi there, Nam</span>
+                    <button @click="handleLogout">Logout</button>
                 </div>
             </div>
-            <button>Sign Up</button>
-            <button>Log In</button>
+            <button @click="handleSignUp" v-if="!isAuthenticated">Sign Up</button>
+            <button @click="handleLogin" v-if="!isAuthenticated">Log In</button>
         </nav>
     </div>
 </template>
+
+<script>
+export default {
+    methods: {
+        handleLogin() {
+            this.$auth0.loginWithRedirect({
+                appState: {
+                    target: "/",
+                },
+            });
+        },
+        handleSignUp() {
+            this.$auth0.loginWithRedirect({
+                appState: {
+                    target: "/",
+                },
+                authorizationParams: {
+                    screen_hint: "signup",
+                },
+            });
+        },
+        handleLogout() {
+            this.$auth0.logout({
+                logoutParams: {
+                    returnTo: window.location.origin,
+                },
+            });
+        }
+    },
+    data() {
+        return {
+            isAuthenticated: this.$auth0.isAuthenticated,
+        };
+    },
+};
+</script>
 
 <style scoped>
 .navbar {
