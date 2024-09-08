@@ -1,12 +1,11 @@
 <template>
     <div v-if="error" class="error">{{ error }}</div>
-    <div v-if="playlist" class="playlist-details">
+    <div v-if="songs" class="playlist-details">
         <div class="playlist-info">
             <div class="cover">
-                <!-- TODO: remove hardcode -->
-                <img src="https://picsum.photos/200/300" />
+                <img :src="songs.image_url || 'https://picsum.photos/200/300'" :alt="songs.playlist_name" />
             </div>
-            <h2>{{ playlist.title }}</h2>
+            <h2>{{ songs.title }}</h2>
             <p>Created by Nam</p>
             <p class="description">Lorem ipsum</p>
             <button>Delete Playlist</button>
@@ -17,11 +16,11 @@
             <div v-if="!1">
                 No songs have been added to this playlist yet
             </div>
-            <div v-for="(song, index) in playlist" :key="index" class="single-song">
+            <div v-for="(song, index) in songs" :key="index" class="single-song">
                 <div class="details">
                     <h3>{{ song.song_name }}</h3>
                     <p>{{ song.artist_names }}</p>
-                    <p v-for="artist in playlist.artist_names">{{ artist }}, </p>
+                    <p v-for="artist in songs.artist_names">{{ artist }}, </p>
                 </div>
                 <button>delete</button>
             </div>
@@ -31,13 +30,30 @@
 
 
 <script>
-import getDocument from '@/composables/getDocument';
+import getSongsInPlaylist from '@/composables/getSongsInPlaylist';
+import { onMounted, ref } from 'vue';
+
 
 export default {
     props: ["id"],
     setup(props) {
-        const { error, document: playlist } = getDocument("playlist", props.id);
-        return {error, playlist}
+        const error = ref(null);
+        const songs = ref([]);
+        const isPending = ref(true);
+
+        onMounted(async () => {
+            try {
+                const result = await getSongsInPlaylist(props.id);
+                songs.value = result.songs.value || [];
+                error.value = result.error.value;
+            } catch (e) {
+                error.value = "An unexpected error occurred";
+                console.error(e)
+            } finally {
+                isPending.value = false;
+            }
+        })
+        return { error, isPending, songs };
     }
 }
 </script>
