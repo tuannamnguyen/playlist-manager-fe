@@ -1,9 +1,11 @@
 <template>
     <div class="home">
-        <div v-if="error" class="error">Could not fetch the data</div>
-        <div v-if="playlists">
-            <ListView :playlists="playlists"></ListView>
+        <div v-if="error" class="error">{{ error }}</div>
+        <div v-else-if="isPending">Loading...</div>
+        <div v-else-if="playlists.length">
+            <ListView :playlists="playlists" />
         </div>
+        <div v-else>No playlists found.</div>
     </div>
 </template>
 
@@ -18,13 +20,14 @@ export default {
     setup() {
         const error = ref(null);
         const isPending = ref(true);
-        const playlists = ref(null);
+        const playlists = ref([]);
 
         onMounted(async () => {
             try {
                 const result = await getPlaylists();
-                playlists.value = result.playlists;
-                error.value = result.error;
+                playlists.value = result.playlists.value || [];
+                error.value = result.error.value;
+                console.log('Playlists in Home:', playlists.value); // Add this for debugging
             } catch (e) {
                 error.value = "An unexpected error occurred";
                 console.error(e);
