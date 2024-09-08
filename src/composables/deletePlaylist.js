@@ -2,7 +2,7 @@ import { ref } from "vue";
 
 const apiServerUrl = import.meta.env.VITE_API_SERVER_URL;
 
-const deletePlaylist = async () => {
+const deletePlaylist = async (id) => {
     const error = ref(null);
     const isPending = ref(true);
 
@@ -13,6 +13,7 @@ const deletePlaylist = async () => {
         if (!response.ok) {
             throw new Error('Failed to delete playlist');
         }
+        console.log('Deleted playlist:', id);
     } catch (err) {
         console.error('Error deleting playlist:', err);
         error.value = 'Could not delete playlist';

@@ -2,7 +2,7 @@ import { ref } from "vue";
 
 const apiServerUrl = import.meta.env.VITE_API_SERVER_URL;
 
-const getPlaylists = async () => {
+const getAllPlaylists = async () => {
     const error = ref(null);
     const isPending = ref(true);
     const playlists = ref([]);
@@ -13,6 +13,7 @@ const getPlaylists = async () => {
             throw new Error('Failed to fetch playlists');
         }
         playlists.value = await response.json();
+        console.log('Fetched playlists:', playlists.value);
     } catch (err) {
         console.error('Error fetching playlists:', err);
         error.value = 'Could not fetch playlists';
@@ -23,4 +24,4 @@ const getPlaylists = async () => {
     return { error, isPending, playlists };
 };
 
-export default getPlaylists;
+export default getAllPlaylists;
