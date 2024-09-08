@@ -31,11 +31,28 @@
 
 <script>
 import getSongsInPlaylist from '@/composables/getSongsInPlaylist';
+import { onMounted, ref } from 'vue';
+
 
 export default {
     props: ["id"],
     setup(props) {
-        const { error, isPending, songs } = getSongsInPlaylist("playlist", props.id);
+        const error = ref(null);
+        const songs = ref([]);
+        const isPending = ref(true);
+
+        onMounted(async () => {
+            try {
+                const result = await getSongsInPlaylist(props.id);
+                songs.value = result.songs.value || [];
+                error.value = result.error.value;
+            } catch (e) {
+                error.value = "An unexpected error occurred";
+                console.error(e)
+            } finally {
+                isPending.value = false;
+            }
+        })
         return { error, isPending, songs };
     }
 }
