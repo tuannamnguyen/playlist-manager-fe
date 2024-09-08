@@ -11,7 +11,7 @@
 
 <script>
 import ListView from '@/components/ListView.vue';
-import getPlaylists from '@/composables/getPlaylists';
+import getPlaylists from '@/composables/getAllPlaylists';
 export default {
     components: { ListView },
     setup() {

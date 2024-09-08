@@ -10,9 +10,9 @@
 </template>
 
 <script>
-import { ref, onMounted } from 'vue';
 import ListView from '@/components/ListView.vue';
-import getPlaylists from '@/composables/getPlaylists';
+import getPlaylists from '@/composables/getAllPlaylists';
+import { onMounted, ref } from 'vue';
 
 export default {
     name: "Home",
