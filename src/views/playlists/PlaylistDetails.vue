@@ -31,13 +31,13 @@
 
 
 <script>
-import getDocument from '@/composables/getDocument';
+import getSongsInPlaylist from '@/composables/getSongsInPlaylist';
 
 export default {
     props: ["id"],
     setup(props) {
-        const { error, document: playlist } = getDocument("playlist", props.id);
-        return {error, playlist}
+        const { error, document: playlist } = getSongsInPlaylist("playlist", props.id);
+        return { error, playlist }
     }
 }
 </script>
