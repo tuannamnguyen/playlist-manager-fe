@@ -15,14 +15,11 @@
 <script>
 import { ref } from 'vue';
 import createPlaylist from '@/composables/createPlaylist';
+import { useAuth0 } from "@auth0/auth0-vue";
 
 export default {
-    data() {
-        return {
-            user: this.$auth0.user,
-        };
-    },
     setup() {
+        const { user } = useAuth0();
         const title = ref('');
         const description = ref('');
         const error = ref(null);
@@ -37,8 +34,7 @@ export default {
                 error.value = "Playlist title is required";
                 return;
             }
-
-            const userId = 'user123'; // Replace with actual user ID or authentication logic
+            const userId = user.value.sub;
 
             const { error: apiError, isPending: apiIsPending, newPlaylist } = await createPlaylist(title.value, userId);
 
