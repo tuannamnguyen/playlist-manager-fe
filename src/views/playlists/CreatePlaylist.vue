@@ -8,47 +8,55 @@
         <button v-else disabled>Saving...</button>
 
         <p v-if="error" class="error">{{ error }}</p>
-        <p v-if="success" class="success">Playlist created successfully!</p>
     </form>
 </template>
 
 <script>
 import { ref } from 'vue';
+import { useAuth0 } from '@auth0/auth0-vue';
+import { useRouter } from 'vue-router';
 import createPlaylist from '@/composables/createPlaylist';
-import { useAuth0 } from "@auth0/auth0-vue";
 
 export default {
     setup() {
         const { user } = useAuth0();
+        const router = useRouter();
+
         const title = ref('');
         const description = ref('');
         const error = ref(null);
         const isPending = ref(false);
-        const success = ref(false);
 
         const handleSubmit = async () => {
             error.value = null;
-            success.value = false;
 
             if (!title.value.trim()) {
                 error.value = "Playlist title is required";
                 return;
             }
-            const userId = user.value.sub;
 
-            const { error: apiError, isPending: apiIsPending, newPlaylist } = await createPlaylist(title.value, userId);
+            if (!user.value) {
+                error.value = "User not authenticated";
+                return;
+            }
 
-            isPending.value = apiIsPending.value;
+            isPending.value = true;
 
-            if (apiError.value) {
-                error.value = apiError.value;
-            } else if (newPlaylist.value) {
-                success.value = true;
-                title.value = '';
-                description.value = '';
-                console.log('New playlist created:', newPlaylist.value);
-                // You might want to emit an event here to notify the parent component
-                // this.$emit('playlist-created', newPlaylist.value);
+            try {
+                const { error: apiError, newPlaylist } = await createPlaylist(title.value, user.value.sub);
+
+                if (apiError.value) {
+                    error.value = apiError.value;
+                } else if (newPlaylist.value) {
+                    console.log('New playlist created:', newPlaylist.value);
+                    // Redirect to the home page
+                    router.push('/');
+                }
+            } catch (err) {
+                console.error('Error creating playlist:', err);
+                error.value = 'An unexpected error occurred';
+            } finally {
+                isPending.value = false;
             }
         };
 
@@ -57,7 +65,6 @@ export default {
             description,
             error,
             isPending,
-            success,
             handleSubmit
         };
     }
@@ -82,9 +89,5 @@ label {
 
 .error {
     color: red;
-}
-
-.success {
-    color: green;
 }
 </style>
