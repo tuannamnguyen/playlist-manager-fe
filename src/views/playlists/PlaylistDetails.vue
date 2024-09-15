@@ -1,19 +1,18 @@
 <template>
     <div v-if="error" class="error">{{ error }}</div>
-    <div v-if="songs" class="playlist-details">
+    <div v-if="playlist" class="playlist-details">
         <div class="playlist-info">
             <div class="cover">
-                <img :src="songs.image_url || 'https://picsum.photos/200/300'" :alt="songs.playlist_name" />
+                <img :src="'https://picsum.photos/200/300'" :alt="songs.playlist_name" />
             </div>
-            <h2>{{ songs.title }}</h2>
-            <p>Created by Nam</p>
+            <h2>{{ playlist.playlist_name }}</h2>
+            <p>Created by {{ playlist.user_name }}</p>
             <p class="description">Lorem ipsum</p>
             <button>Delete Playlist</button>
         </div>
 
         <div class="song-list">
-            <!-- TODO: remove hardcode -->
-            <div v-if="!1">
+            <div v-if="!songs.length">
                 No songs have been added to this playlist yet
             </div>
             <div v-for="(song, index) in songs" :key="index" class="single-song">
@@ -31,6 +30,7 @@
 
 <script>
 import getSongsInPlaylist from '@/composables/getSongsInPlaylist';
+import getPlaylist from '@/composables/getPlaylist';
 import { onMounted, ref } from 'vue';
 
 
@@ -39,10 +39,16 @@ export default {
     setup(props) {
         const error = ref(null);
         const songs = ref([]);
+        const playlist = ref({});
         const isPending = ref(true);
 
         onMounted(async () => {
             try {
+                const playlistResult = await getPlaylist(props.id);
+                playlist.value = playlistResult.playlist.value || {};
+                error.value = playlistResult.error.value;
+
+
                 const result = await getSongsInPlaylist(props.id);
                 songs.value = result.songs.value || [];
                 error.value = result.error.value;
@@ -53,7 +59,7 @@ export default {
                 isPending.value = false;
             }
         })
-        return { error, isPending, songs };
+        return { error, isPending, songs, playlist };
     }
 }
 </script>
