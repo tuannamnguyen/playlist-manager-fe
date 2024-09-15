@@ -8,7 +8,7 @@
             <h2>{{ playlist.playlist_name }}</h2>
             <p>Created by {{ playlist.user_name }}</p>
             <p class="description">Lorem ipsum</p>
-            <button>Delete Playlist</button>
+            <button v-if="ownership">Delete Playlist</button>
         </div>
 
         <div class="song-list">
@@ -21,7 +21,7 @@
                     <p>{{ song.artist_names }}</p>
                     <p v-for="artist in songs.artist_names">{{ artist }}, </p>
                 </div>
-                <button>delete</button>
+                <button  v-if="ownership">delete</button>
             </div>
         </div>
     </div>
@@ -31,7 +31,8 @@
 <script>
 import getSongsInPlaylist from '@/composables/getSongsInPlaylist';
 import getPlaylist from '@/composables/getPlaylist';
-import { onMounted, ref } from 'vue';
+import { useAuth0 } from '@auth0/auth0-vue';
+import { computed, onMounted, ref } from 'vue';
 
 
 export default {
@@ -41,6 +42,7 @@ export default {
         const songs = ref([]);
         const playlist = ref({});
         const isPending = ref(true);
+        const { user } = useAuth0();
 
         onMounted(async () => {
             try {
@@ -59,7 +61,15 @@ export default {
                 isPending.value = false;
             }
         })
-        return { error, isPending, songs, playlist };
+
+        const ownership = computed(() => {
+            return (
+                playlist.value &&
+                user.value &&
+                user.value.sub == playlist.value.user_id
+            );
+        })
+        return { error, isPending, songs, playlist, ownership };
     }
 }
 </script>
