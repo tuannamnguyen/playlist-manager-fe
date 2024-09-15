@@ -2,7 +2,7 @@ import { ref } from "vue";
 
 const apiServerUrl = import.meta.env.VITE_API_SERVER_URL;
 
-const createPlaylist = async (playlistName, userId) => {
+const createPlaylist = async (playlistName, userId, userName) => {
     const error = ref(null);
     const isPending = ref(true);
     const newPlaylist = ref(null);
@@ -15,7 +15,8 @@ const createPlaylist = async (playlistName, userId) => {
             },
             body: JSON.stringify({
                 playlist_name: playlistName,
-                user_id: userId
+                user_id: userId,
+                user_name: userName
             }),
         });
         if (!response.ok) {
