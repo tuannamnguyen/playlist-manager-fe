@@ -9,7 +9,6 @@
                     </div>
                     <div class="info">
                         <h3>{{ playlist.playlist_name }}</h3>
-                        <!-- TODO: need to replace with user name here -->
                         <p>created by {{ playlist.user_name }}</p>
                     </div>
                 </div>
