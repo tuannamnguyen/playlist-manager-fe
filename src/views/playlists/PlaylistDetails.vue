@@ -22,7 +22,9 @@
                     <h3>{{ song.song_name }}</h3>
                     <p>{{ song.artist_names.join(', ') }}</p>
                 </div>
-                <button v-if="ownership">delete</button>
+                <button @click="() => handleDeleteSong(song.song_id)" v-if="ownership" :disabled="isDeletingSong">
+                    {{ isDeletingSong ? 'Deleting...' : 'Delete' }}
+                </button>
             </div>
         </div>
     </div>
@@ -32,6 +34,7 @@
 import getSongsInPlaylist from '@/composables/getSongsInPlaylist';
 import getPlaylist from '@/composables/getPlaylist';
 import deletePlaylist from '@/composables/deletePlaylist';
+import deleteSongsFromPlaylist from '@/composables/deleteSongsFromPlaylist';
 import { useAuth0 } from '@auth0/auth0-vue';
 import { computed, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
@@ -44,10 +47,11 @@ export default {
         const playlist = ref({});
         const isPending = ref(true);
         const isDeleting = ref(false);
+        const isDeletingSong = ref(false);
         const { user } = useAuth0();
         const router = useRouter();
 
-        onMounted(async () => {
+        const fetchPlaylistData = async () => {
             try {
                 const playlistResult = await getPlaylist(props.id);
                 playlist.value = playlistResult.playlist.value || {};
@@ -62,7 +66,9 @@ export default {
             } finally {
                 isPending.value = false;
             }
-        })
+        };
+
+        onMounted(fetchPlaylistData);
 
         const ownership = computed(() => {
             return (
@@ -95,11 +101,44 @@ export default {
             }
         };
 
-        return { error, isPending, songs, playlist, ownership, handleDeletePlaylist, isDeleting };
+        const handleDeleteSong = async (songId) => {
+            if (!confirm('Are you sure you want to delete this song from the playlist?')) {
+                return;
+            }
+
+            isDeletingSong.value = true;
+            error.value = null;
+
+            try {
+                const { error: deleteError, updatedPlaylist: updatedPlaylistValue } = await deleteSongsFromPlaylist(props.id, [songId]);
+                if (deleteError.value) {
+                    throw new Error(deleteError.value);
+                }
+                // Refresh the playlist data after successful deletion
+                await fetchPlaylistData();
+                console.log('Song deleted successfully and playlist refreshed');
+            } catch (e) {
+                error.value = e.message || "Failed to delete song from playlist";
+                console.error('Error deleting song from playlist:', e);
+            } finally {
+                isDeletingSong.value = false;
+            }
+        };
+
+        return {
+            error,
+            isPending,
+            songs,
+            playlist,
+            ownership,
+            handleDeletePlaylist,
+            handleDeleteSong,
+            isDeleting,
+            isDeletingSong
+        };
     }
 }
 </script>
-
 <style>
 .playlist-details {
     display: grid;
