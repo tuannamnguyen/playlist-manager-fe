@@ -12,9 +12,14 @@
 <script>
 import ListView from '@/components/ListView.vue';
 import getPlaylists from '@/composables/getAllPlaylists';
+import { useAuth0 } from '@auth0/auth0-vue';
+
 export default {
     components: { ListView },
     setup() {
+        const { user } = useAuth0();
+
+        // TODO: update this
         const { error, playlists } = getPlaylists();
         return { error, playlists };
     }

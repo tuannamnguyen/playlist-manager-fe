@@ -40,7 +40,7 @@ export default {
             };
 
             try {
-                const { error: addError, updatedPlaylist } = await addSongsToPlaylist(props.playlist.id, [song]);
+                const { error: addError, updatedPlaylist } = await addSongsToPlaylist(props.playlist.playlist_id, [song]);
 
                 if (addError.value) {
                     throw new Error(addError.value);
