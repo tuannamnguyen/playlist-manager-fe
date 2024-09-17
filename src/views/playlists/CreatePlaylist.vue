@@ -43,7 +43,7 @@ export default {
             isPending.value = true;
 
             try {
-                const { error: apiError, newPlaylist } = await createPlaylist(title.value, user.value.sub);
+                const { error: apiError, newPlaylist } = await createPlaylist(title.value, user.value.sub, user.value.name);
 
                 if (apiError.value) {
                     error.value = apiError.value;
