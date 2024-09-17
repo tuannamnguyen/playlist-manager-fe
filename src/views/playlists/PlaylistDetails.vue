@@ -26,6 +26,7 @@
                     {{ isDeletingSong ? 'Deleting...' : 'Delete' }}
                 </button>
             </div>
+            <AddSongs v-if="ownership" :playlist="playlist" @song-added="handleSongAdded" />
         </div>
     </div>
 </template>
@@ -38,9 +39,11 @@ import deleteSongsFromPlaylist from '@/composables/deleteSongsFromPlaylist';
 import { useAuth0 } from '@auth0/auth0-vue';
 import { computed, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
+import AddSongs from '@/components/AddSongs.vue';
 
 export default {
     props: ["id"],
+    components: { AddSongs },
     setup(props) {
         const error = ref(null);
         const songs = ref([]);
@@ -125,6 +128,11 @@ export default {
             }
         };
 
+        const handleSongAdded = async (updatedPlaylist) => {
+            console.log('Song added, refreshing playlist data');
+            await fetchPlaylistData();
+        };
+
         return {
             error,
             isPending,
@@ -133,6 +141,7 @@ export default {
             ownership,
             handleDeletePlaylist,
             handleDeleteSong,
+            handleSongAdded,
             isDeleting,
             isDeletingSong
         };
