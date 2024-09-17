@@ -2,13 +2,18 @@ import { ref } from "vue";
 
 const apiServerUrl = import.meta.env.VITE_API_SERVER_URL;
 
-const getAllPlaylists = async () => {
+const getAllPlaylists = async (userId = null) => {
     const error = ref(null);
     const isPending = ref(true);
     const playlists = ref([]);
 
     try {
-        const response = await fetch(`${apiServerUrl}/api/playlists`);
+        let url = `${apiServerUrl}/api/playlists`;
+        if (userId) {
+            url += `?user_id=${encodeURIComponent(userId)}`;
+        }
+
+        const response = await fetch(url);
         if (!response.ok) {
             throw new Error('Failed to fetch playlists');
         }
