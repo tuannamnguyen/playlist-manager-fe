@@ -8,6 +8,8 @@
             <h2>{{ playlist.playlist_name }}</h2>
             <p>Created by {{ playlist.user_name }}</p>
             <p class="description">Lorem ipsum</p>
+            <button v-if="ownership">Convert playlist</button>
+            <br><br>
             <button v-if="ownership" @click="handleDeletePlaylist" :disabled="isDeleting">
                 {{ isDeleting ? 'Deleting...' : 'Delete Playlist' }}
             </button>
