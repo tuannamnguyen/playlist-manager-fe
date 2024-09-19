@@ -8,7 +8,9 @@
             <h2>{{ playlist.playlist_name }}</h2>
             <p>Created by {{ playlist.user_name }}</p>
             <p class="description">Lorem ipsum</p>
-            <button v-if="ownership">Convert playlist</button>
+            <button v-if="ownership" @click="handleConvertPlaylist" :disabled="isConverting">
+                {{ isConverting ? 'Converting...' : 'Convert playlist' }}
+            </button>
             <br><br>
             <button v-if="ownership" @click="handleDeletePlaylist" :disabled="isDeleting">
                 {{ isDeleting ? 'Deleting...' : 'Delete Playlist' }}
@@ -23,6 +25,7 @@
                 <div class="details">
                     <h3>{{ song.song_name }}</h3>
                     <p>{{ song.artist_names.join(', ') }}</p>
+                    <p>{{ song.album_name }}</p>
                 </div>
                 <button @click="() => handleDeleteSong(song.song_id)" v-if="ownership" :disabled="isDeletingSong">
                     {{ isDeletingSong ? 'Deleting...' : 'Delete' }}
@@ -42,6 +45,8 @@ import { useAuth0 } from '@auth0/auth0-vue';
 import { computed, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import AddSongs from '@/components/AddSongs.vue';
+import { initiateOAuthLogin } from '@/composables/oauth';
+import { convertPlaylist } from '@/composables/convert';
 
 export default {
     props: ["id"],
@@ -55,6 +60,7 @@ export default {
         const isDeletingSong = ref(false);
         const { user } = useAuth0();
         const router = useRouter();
+        const isConverting = ref(false);
 
         const fetchPlaylistData = async () => {
             try {
@@ -135,6 +141,50 @@ export default {
             await fetchPlaylistData();
         };
 
+        const handleConvertPlaylist = async () => {
+            isConverting.value = true;
+            error.value = null;
+
+            try {
+                // Store the current playlist ID in local storage
+                // so we can retrieve it after OAuth redirect
+                localStorage.setItem('pendingConversionPlaylistId', props.id);
+
+                // Initiate Spotify OAuth
+                await initiateOAuthLogin('spotify');
+                // The page will redirect, so we return here
+                return;
+            } catch (e) {
+                error.value = e.message || "Failed to initiate playlist conversion";
+                console.error('Error in conversion process:', e);
+            } finally {
+                isConverting.value = false;
+            }
+        };
+
+        const performConversion = async () => {
+            try {
+                const { error: convertError, conversionResult } = await convertPlaylist(props.id, 'spotify');
+                if (convertError.value) {
+                    throw new Error(convertError.value);
+                }
+                console.log('Playlist converted successfully:', conversionResult.value);
+                // You might want to update the UI or show a success message here
+            } catch (e) {
+                error.value = e.message || "Failed to convert playlist";
+                console.error('Error converting playlist:', e);
+            }
+        };
+
+        // Check if we're returning from OAuth redirect
+        onMounted(() => {
+            const pendingPlaylistId = localStorage.getItem('pendingConversionPlaylistId');
+            if (pendingPlaylistId) {
+                localStorage.removeItem('pendingConversionPlaylistId');
+                performConversion();
+            }
+        });
+
         return {
             error,
             isPending,
@@ -145,7 +195,9 @@ export default {
             handleDeleteSong,
             handleSongAdded,
             isDeleting,
-            isDeletingSong
+            isDeletingSong,
+            handleConvertPlaylist,
+            isConverting
         };
     }
 }
