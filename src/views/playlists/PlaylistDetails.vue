@@ -8,8 +8,8 @@
             <h2>{{ playlist.playlist_name }}</h2>
             <p>Created by {{ playlist.user_name }}</p>
             <p class="description">Lorem ipsum</p>
-            <button v-if="ownership" @click="handleConvertPlaylist" :disabled="isConverting">
-                {{ isConverting ? 'Converting...' : 'Convert playlist' }}
+            <button v-if="ownership" @click="handleConvertPlaylist(playlist.playlist_id, 'spotify')" :disabled="isConverting">
+                {{ isConverting ? 'Converting...' : 'Convert playlist to Spotify' }}
             </button>
             <br><br>
             <button v-if="ownership" @click="handleDeletePlaylist" :disabled="isDeleting">
@@ -45,8 +45,8 @@ import { useAuth0 } from '@auth0/auth0-vue';
 import { computed, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import AddSongs from '@/components/AddSongs.vue';
-import { initiateOAuthLogin } from '@/composables/oauth';
 import { convertPlaylist } from '@/composables/convert';
+import { initiateOAuthLogin } from '@/composables/oauth';
 
 export default {
     props: ["id"],
@@ -141,49 +141,35 @@ export default {
             await fetchPlaylistData();
         };
 
-        const handleConvertPlaylist = async () => {
+        const handleConvertPlaylist = async (playlistId, service) => {
             isConverting.value = true;
             error.value = null;
 
             try {
-                // Store the current playlist ID in local storage
-                // so we can retrieve it after OAuth redirect
-                localStorage.setItem('pendingConversionPlaylistId', props.id);
+                // Attempt to initiate OAuth login
+                const response = await initiateOAuthLogin(service);
 
-                // Initiate Spotify OAuth
-                await initiateOAuthLogin('spotify');
-                // The page will redirect, so we return here
-                return;
+                if (response.status === 200 && response.data === "user has already logged in") {
+                    // User is already logged in, proceed with conversion
+                    const result = await convertPlaylist(playlistId, service);
+                    if (result.error) {
+                        throw new Error(result.error);
+                    }
+                    // Handle successful conversion (e.g., show a success message)
+                    console.log("Playlist converted successfully");
+                    // You might want to update the UI or show a notification here
+                } else {
+                    // User hasn't logged in, the initiateOAuthLogin function should handle the login process
+                    console.log("User needs to log in first");
+                    // You might want to show a message to the user here
+                }
             } catch (e) {
-                error.value = e.message || "Failed to initiate playlist conversion";
-                console.error('Error in conversion process:', e);
+                error.value = e.message || "Failed to convert playlist";
+                console.error('Error converting playlist:', e);
             } finally {
                 isConverting.value = false;
             }
         };
-
-        const performConversion = async () => {
-            try {
-                const { error: convertError, conversionResult } = await convertPlaylist(props.id, 'spotify');
-                if (convertError.value) {
-                    throw new Error(convertError.value);
-                }
-                console.log('Playlist converted successfully:', conversionResult.value);
-                // You might want to update the UI or show a success message here
-            } catch (e) {
-                error.value = e.message || "Failed to convert playlist";
-                console.error('Error converting playlist:', e);
-            }
-        };
-
-        // Check if we're returning from OAuth redirect
-        onMounted(() => {
-            const pendingPlaylistId = localStorage.getItem('pendingConversionPlaylistId');
-            if (pendingPlaylistId) {
-                localStorage.removeItem('pendingConversionPlaylistId');
-                performConversion();
-            }
-        });
 
         return {
             error,
@@ -194,13 +180,16 @@ export default {
             handleDeletePlaylist,
             handleDeleteSong,
             handleSongAdded,
+            handleConvertPlaylist,
             isDeleting,
             isDeletingSong,
-            handleConvertPlaylist,
-            isConverting
+            isConverting,
         };
     }
+
+
 }
+
 </script>
 <style>
 .playlist-details {
