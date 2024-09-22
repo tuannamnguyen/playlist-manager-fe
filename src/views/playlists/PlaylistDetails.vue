@@ -8,7 +8,8 @@
             <h2>{{ playlist.playlist_name }}</h2>
             <p>Created by {{ playlist.user_name }}</p>
             <p class="description">Lorem ipsum</p>
-            <button v-if="ownership" @click="handleConvertPlaylist(playlist.playlist_id, 'spotify')" :disabled="isConverting">
+            <button v-if="ownership" @click="handleConvertPlaylist(playlist.playlist_id, 'spotify')"
+                :disabled="isConverting">
                 {{ isConverting ? 'Converting...' : 'Convert playlist to Spotify' }}
             </button>
             <br><br>
@@ -45,8 +46,7 @@ import { useAuth0 } from '@auth0/auth0-vue';
 import { computed, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import AddSongs from '@/components/AddSongs.vue';
-import { convertPlaylist } from '@/composables/convert';
-import { initiateOAuthLogin } from '@/composables/oauth';
+import { convertPlaylist } from '@/composables/convert'; // Now only using convertPlaylist function
 
 export default {
     props: ["id"],
@@ -73,7 +73,7 @@ export default {
                 error.value = result.error.value;
             } catch (e) {
                 error.value = "An unexpected error occurred";
-                console.error(e)
+                console.error(e);
             } finally {
                 isPending.value = false;
             }
@@ -87,7 +87,7 @@ export default {
                 user.value &&
                 user.value.sub == playlist.value.user_id
             );
-        })
+        });
 
         const handleDeletePlaylist = async () => {
             if (!confirm('Are you sure you want to delete this playlist?')) {
@@ -121,7 +121,7 @@ export default {
             error.value = null;
 
             try {
-                const { error: deleteError, updatedPlaylist: updatedPlaylistValue } = await deleteSongsFromPlaylist(props.id, [songId]);
+                const { error: deleteError } = await deleteSongsFromPlaylist(props.id, [songId]);
                 if (deleteError.value) {
                     throw new Error(deleteError.value);
                 }
@@ -136,33 +136,26 @@ export default {
             }
         };
 
-        const handleSongAdded = async (updatedPlaylist) => {
+        const handleSongAdded = async () => {
             console.log('Song added, refreshing playlist data');
             await fetchPlaylistData();
         };
 
+        // Simplified playlist conversion logic
         const handleConvertPlaylist = async (playlistId, service) => {
             isConverting.value = true;
             error.value = null;
 
             try {
-                // Attempt to initiate OAuth login
-                const response = await initiateOAuthLogin(service);
+                // Directly call convertPlaylist which handles OAuth login and playlist conversion
+                const result = await convertPlaylist(playlistId, service);
 
-                if (response.status === 200 && response.data === "user has already logged in") {
-                    // User is already logged in, proceed with conversion
-                    const result = await convertPlaylist(playlistId, service);
-                    if (result.error) {
-                        throw new Error(result.error);
-                    }
-                    // Handle successful conversion (e.g., show a success message)
-                    console.log("Playlist converted successfully");
-                    // You might want to update the UI or show a notification here
-                } else {
-                    // User hasn't logged in, the initiateOAuthLogin function should handle the login process
-                    console.log("User needs to log in first");
-                    // You might want to show a message to the user here
+                if (result.error) {
+                    throw new Error(result.error.value);
                 }
+
+                // Handle successful conversion
+                console.log("Playlist converted successfully");
             } catch (e) {
                 error.value = e.message || "Failed to convert playlist";
                 console.error('Error converting playlist:', e);
@@ -186,12 +179,11 @@ export default {
             isConverting,
         };
     }
-
-
-}
-
+};
 </script>
+
 <style>
+/* Same styling as before */
 .playlist-details {
     display: grid;
     grid-template-columns: 1fr 2fr;
