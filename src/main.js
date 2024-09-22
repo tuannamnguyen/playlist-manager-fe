@@ -1,16 +1,19 @@
-import { createApp } from 'vue'
-import App from './App.vue'
-import router from './router'
-import { projectAuth } from './firebase/config'
+import { createAuth0 } from "@auth0/auth0-vue";
+import './assets/main.css';
 
+import { createApp } from 'vue';
+import App from './App.vue';
+import router from './router';
 
-// Global Styles
-import './assets/main.css'
+const app = createApp(App);
 
-let app
+app.use(router)
+    .use(createAuth0({
+        domain: import.meta.env.VITE_AUTH0_DOMAIN,
+        clientId: import.meta.env.VITE_AUTH0_CLIENT_ID,
+        authorizationParams: {
+            redirect_uri: import.meta.env.VITE_AUTH0_CALLBACK_URL,
+        },
+    }));
 
-projectAuth.onAuthStateChanged(() => {
-    if (!app) {
-        app = createApp(App).use(router).mount('#app')
-    }
-})
+app.mount('#app');
