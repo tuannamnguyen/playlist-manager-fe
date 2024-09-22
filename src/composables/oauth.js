@@ -8,16 +8,19 @@ export const initiateOAuthLogin = async (service) => {
     const isPending = ref(true);
 
     try {
-        // Instead of fetching, we'll redirect the user to our backend endpoint
-        window.location.href = `${apiServerUrl}/api/oauth/${service}`;
+        const response = await fetch(`${apiServerUrl}/api/oauth/${service}`);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.text();
+        return data;
     } catch (err) {
         console.error(`Error initiating ${service} OAuth:`, err);
         error.value = `Could not initiate ${service} OAuth`;
+        throw err;
     } finally {
         isPending.value = false;
     }
-
-    return { error, isPending };
 };
 
 // Function to handle OAuth logout
