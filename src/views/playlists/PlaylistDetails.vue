@@ -8,7 +8,7 @@
             <h2>{{ playlist.playlist_name }}</h2>
             <p>Created by {{ playlist.user_name }}</p>
             <p class="description">Lorem ipsum</p>
-            <button v-if="ownership" @click="handleConvertPlaylist(playlist.playlist_id, 'spotify')"
+            <button v-if="ownership" @click="handleConvertPlaylist(playlist.playlist_id, 'spotify', playlist.playlist_name)"
                 :disabled="isConverting">
                 {{ isConverting ? 'Converting...' : 'Convert playlist to Spotify' }}
             </button>
@@ -142,13 +142,13 @@ export default {
         };
 
         // Simplified playlist conversion logic
-        const handleConvertPlaylist = async (playlistId, service) => {
+        const handleConvertPlaylist = async (playlistId, service, playlistName) => {
             isConverting.value = true;
             error.value = null;
 
             try {
                 // Directly call convertPlaylist which handles OAuth login and playlist conversion
-                const result = await convertPlaylist(playlistId, service);
+                const result = await convertPlaylist(playlistId, service, playlistName);
 
                 if (result.error) {
                     throw new Error(result.error.value);
