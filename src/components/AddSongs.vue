@@ -23,6 +23,8 @@
 <script>
 import { ref } from 'vue';
 import addSongsToPlaylist from '@/composables/addSongsToPlaylist';
+const apiServerUrl = import.meta.env.VITE_API_SERVER_URL;
+
 
 export default {
     props: ["playlist"],
@@ -41,7 +43,7 @@ export default {
             error.value = null;
 
             try {
-                const response = await fetch('http://localhost:8080/api/search', {
+                const response = await fetch(`${apiServerUrl}/api/search`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

@@ -1,5 +1,4 @@
 <template>
-    <div v-if="error" class="error">{{ error }}</div>
     <div v-if="playlist" class="playlist-details">
         <div class="playlist-info">
             <div class="cover">
